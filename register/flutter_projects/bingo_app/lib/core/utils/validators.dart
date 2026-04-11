@@ -1,0 +1,40 @@
+class Validators {
+  // Email validation
+  static String? email(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email is required';
+    }
+
+    if (!value.contains('@') || !value.contains('.')) {
+      return 'Enter a valid email';
+    }
+
+    return null;
+  }
+
+  // Password validation
+  static String? password(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+
+    return null;
+  }
+
+  // Username validation
+  static String? username(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Username is required';
+    }
+
+    if (value.length < 3) {
+      return 'Username must be at least 3 characters';
+    }
+
+    return null;
+  }
+}
