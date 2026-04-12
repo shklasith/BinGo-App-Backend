@@ -15,23 +15,60 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(seedColor: primary),
     );
 
+    return _applySharedTheme(base, isDark: false);
+  }
+
+  static ThemeData buildDarkTheme() {
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
+        brightness: Brightness.dark,
+      ),
+    );
+
+    return _applySharedTheme(base, isDark: true);
+  }
+
+  static ThemeData _applySharedTheme(ThemeData base, {required bool isDark}) {
+    final scaffoldColor = isDark ? const Color(0xFF0F172A) : bg;
+    final cardColor = isDark ? const Color(0xFF111827) : surface;
+    final borderColor = isDark
+        ? const Color(0xFF1F2937)
+        : const Color(0xFFE5E7EB);
+    final foregroundColor = isDark ? const Color(0xFFF9FAFB) : text;
+    final inputFill = isDark
+        ? const Color(0xFF111827)
+        : const Color(0xFFF9FAFB);
+
     return base.copyWith(
-      scaffoldBackgroundColor: bg,
-      textTheme: base.textTheme.apply(bodyColor: text, displayColor: text),
+      scaffoldBackgroundColor: scaffoldColor,
+      cardColor: cardColor,
+      dividerColor: borderColor,
+      appBarTheme: AppBarTheme(
+        backgroundColor: scaffoldColor,
+        foregroundColor: foregroundColor,
+        surfaceTintColor: Colors.transparent,
+      ),
+      textTheme: base.textTheme.apply(
+        bodyColor: foregroundColor,
+        displayColor: foregroundColor,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF9FAFB),
+        fillColor: inputFill,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          borderSide: BorderSide(color: borderColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -52,13 +89,17 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(0xFFE5E7EB)),
+          side: BorderSide(color: borderColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
           minimumSize: const Size.fromHeight(52),
-          foregroundColor: text,
+          foregroundColor: foregroundColor,
         ),
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: foregroundColor,
+        textColor: foregroundColor,
       ),
     );
   }

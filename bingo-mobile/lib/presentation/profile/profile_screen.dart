@@ -39,13 +39,17 @@ class _ProfileView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       children: <Widget>[
         Row(
-          children: const <Widget>[
-            Text(
+          children: <Widget>[
+            const Text(
               'Profile',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
             ),
-            Spacer(),
-            Icon(Icons.settings_outlined, color: AppTheme.muted),
+            const Spacer(),
+            IconButton(
+              onPressed: () => context.push('/settings'),
+              icon: const Icon(Icons.settings_outlined, color: AppTheme.muted),
+              tooltip: 'Settings',
+            ),
           ],
         ),
         const SizedBox(height: 20),

@@ -12,6 +12,7 @@ import '../presentation/profile/profile_screen.dart';
 import '../presentation/scan/scan_result_screen.dart';
 import '../presentation/scan/scan_screen.dart';
 import '../presentation/session/splash_screen.dart';
+import '../presentation/settings/settings_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -72,6 +73,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/profile',
         builder: (BuildContext context, GoRouterState state) =>
             const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (BuildContext context, GoRouterState state) =>
+            const SettingsScreen(),
       ),
     ],
   );
