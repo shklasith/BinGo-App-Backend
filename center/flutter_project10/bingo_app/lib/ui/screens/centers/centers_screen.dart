@@ -19,11 +19,12 @@ class _CentersScreenState extends State<CentersScreen> {
   String? _error;
 
   Future<void> _loadNearby() async {
-    final locationPermission = await Permission.locationWhenInUse.request();
-    if (!locationPermission.isGranted) {
+    final permission = await Permission.locationWhenInUse.request();
+
+    if (!permission.isGranted) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Location permission is required.')),
+        const SnackBar(content: Text('Location permission is required')),
       );
       return;
     }
@@ -35,17 +36,21 @@ class _CentersScreenState extends State<CentersScreen> {
 
     try {
       final position = await Geolocator.getCurrentPosition();
+
       final centers = await _fetchNearbyCenters(
         position.latitude,
         position.longitude,
       );
+
       if (!mounted) return;
+
       setState(() {
         _centers = centers;
         _isLoading = false;
       });
     } catch (e) {
       if (!mounted) return;
+
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -58,6 +63,7 @@ class _CentersScreenState extends State<CentersScreen> {
     double lng,
   ) async {
     await Future.delayed(const Duration(seconds: 1));
+
     return [
       RecyclingCenter(
         name: 'Green Drop Center',
@@ -74,15 +80,22 @@ class _CentersScreenState extends State<CentersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final safeBottom = MediaQuery.of(context).padding.bottom;
+
     return AppScaffold(
-      currentIndex: 1,
+      currentIndex: 3,
       body: Stack(
-        children: <Widget>[
-          Positioned.fill(
+        children: [
+          // 🌈 Background
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 500,
             child: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: <Color>[Color(0xFFE0F2FE), Color(0xFFECFEFF)],
+                  colors: [Color(0xFFE0F2FE), Color(0xFFECFEFF)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -90,18 +103,20 @@ class _CentersScreenState extends State<CentersScreen> {
               child: CustomPaint(painter: _GridPainter()),
             ),
           ),
+
+          // 🔍 Search + Location
           Positioned(
-            top: 14,
+            top: MediaQuery.of(context).padding.top + 14,
             left: 14,
             right: 14,
             child: Row(
-              children: <Widget>[
+              children: [
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(28),
-                      boxShadow: const <BoxShadow>[
+                      boxShadow: const [
                         BoxShadow(
                           color: Color(0x1A000000),
                           blurRadius: 10,
@@ -112,12 +127,7 @@ class _CentersScreenState extends State<CentersScreen> {
                     child: const TextField(
                       decoration: InputDecoration(
                         hintText: 'Search centers...',
-                        hintStyle: TextStyle(color: Color(0xFF9CA3AF)),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Color(0xFF9CA3AF),
-                        ),
-                        filled: false,
+                        prefixIcon: Icon(Icons.search),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(vertical: 14),
                       ),
@@ -146,26 +156,22 @@ class _CentersScreenState extends State<CentersScreen> {
               ],
             ),
           ),
-          const Positioned(
-            top: 190,
-            left: 98,
-            child: _PinMarker(primary: true),
-          ),
-          const Positioned(
-            top: 280,
-            right: 86,
-            child: _PinMarker(primary: false),
-          ),
+
+          // 📍 Markers
+          const Positioned(top: 200, left: 100, child: _PinMarker(primary: true)),
+          const Positioned(top: 300, right: 80, child: _PinMarker(primary: false)),
+
+          // 📦 Bottom Card (FIXED)
           Positioned(
             left: 14,
             right: 14,
-            bottom: 90,
+            bottom: safeBottom + 110, // 🔥 IMPORTANT FIX
             child: Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.94),
+                color: const Color.fromARGB(255, 247, 239, 239).withOpacity(0.95),
                 borderRadius: BorderRadius.circular(18),
-                boxShadow: const <BoxShadow>[
+                boxShadow: const [
                   BoxShadow(
                     color: Color(0x1A000000),
                     blurRadius: 14,
@@ -185,55 +191,52 @@ class _CentersScreenState extends State<CentersScreen> {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+
     if (_error != null) {
-      return Text('Failed to load centers: $_error');
+      return Text('Error: $_error');
     }
+
     if (_centers.isEmpty) {
       return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Text(
             'Find centers near you',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),
           Text(
-            'Tap location button to load nearby recycling drop-off points.',
+            'Tap location button to load nearby recycling points',
             style: TextStyle(color: AppTheme.muted),
           ),
         ],
       );
     }
+
     final center = _centers.first;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
+      children: [
         Text(
           '${_centers.length} Centers Near You',
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '${center.name} • ${center.address}',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: AppTheme.muted),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
+        Text('${center.name} • ${center.address}'),
+        const SizedBox(height: 4),
         Text(
           center.operatingHours,
-          style: const TextStyle(
-            color: AppTheme.primary,
-            fontWeight: FontWeight.w700,
-          ),
+          style: const TextStyle(color: Colors.green),
         ),
       ],
     );
   }
 }
 
+// 📍 Marker
 class _PinMarker extends StatelessWidget {
   const _PinMarker({required this.primary});
   final bool primary;
@@ -241,13 +244,14 @@ class _PinMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Icon(
-      Icons.place_rounded,
-      size: 44,
-      color: primary ? AppTheme.primary : const Color(0xFF16A34A),
+      Icons.location_on,
+      size: 40,
+      color: primary ? Colors.blue : Colors.green,
     );
   }
 }
 
+// 🔲 Grid Background
 class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -256,9 +260,11 @@ class _GridPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     const gap = 36.0;
+
     for (double x = 0; x <= size.width; x += gap) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
     }
+
     for (double y = 0; y <= size.height; y += gap) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
