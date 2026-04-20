@@ -7,6 +7,7 @@ import '../../domain/repositories/education_repository.dart';
 import '../../domain/repositories/leaderboard_repository.dart';
 import '../../domain/repositories/scan_repository.dart';
 import '../../domain/repositories/session_repository.dart';
+import '../../domain/repositories/settings_repository.dart';
 import '../../domain/repositories/user_repository.dart';
 import 'auth_repository_impl.dart';
 import 'center_repository_impl.dart';
@@ -14,10 +15,18 @@ import 'education_repository_impl.dart';
 import 'leaderboard_repository_impl.dart';
 import 'scan_repository_impl.dart';
 import 'session_repository_impl.dart';
+import 'settings_repository_impl.dart';
 import 'user_repository_impl.dart';
 
 final sessionRepositoryProvider = Provider<SessionRepository>(
   (ref) => SessionRepositoryImpl(ref.watch(secureStorageProvider)),
+);
+
+final settingsRepositoryProvider = Provider<SettingsRepository>(
+  (ref) => SettingsRepositoryImpl(
+    ref.watch(secureStorageProvider),
+    ref.watch(dioProvider),
+  ),
 );
 
 final authRepositoryProvider = Provider<AuthRepository>(

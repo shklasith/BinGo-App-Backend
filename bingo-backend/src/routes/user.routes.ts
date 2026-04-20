@@ -3,9 +3,11 @@ import { Router } from 'express';
 import {
     getLeaderboard,
     getProfile,
+    getUserSettings,
     getUserById,
     loginUser,
-    registerUser
+    registerUser,
+    updateUserSettings
 } from '../controllers/user.controller';
 import { protect } from '../middleware/auth';
 
@@ -236,6 +238,8 @@ router.get('/leaderboard', getLeaderboard);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/profile', protect, getProfile as any);
+router.get('/settings', protect, getUserSettings as any);
+router.patch('/settings', protect, updateUserSettings as any);
 
 /**
  * @openapi
