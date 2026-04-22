@@ -3,53 +3,34 @@ import 'package:flutter/material.dart';
 
 import 'auth_shared.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key, required this.onSwitchToLogin});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key, required this.onSwitchToSignUp});
 
-  final VoidCallback onSwitchToLogin;
+  final VoidCallback onSwitchToSignUp;
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final _nameController = TextEditingController();
+//loginpageState
+class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
-  Future<void> _signUp() async {
-    final name = _nameController.text.trim();
+  Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-    final phone = _phoneController.text.trim();
 
-    if ([
-      name,
-      email,
-      password,
-      confirmPassword,
-      phone,
-    ].any((value) => value.isEmpty)) {
-      _showMessage('Please fill all fields');
-      return;
-    }
-
-    if (password != confirmPassword) {
-      _showMessage('Passwords do not match');
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Please enter email and password');
       return;
     }
 
@@ -58,20 +39,19 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await credential.user?.updateDisplayName(name);
-
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       if (!mounted) {
         return;
       }
-      _showMessage('Account created successfully');
-      widget.onSwitchToLogin();
+      _showMessage('Login successful');
     } on FirebaseAuthException catch (e) {
       if (!mounted) {
         return;
       }
-      _showMessage(e.message ?? 'Sign up failed');
+      _showMessage(e.message ?? 'Login failed');
     } finally {
       if (mounted) {
         setState(() {
@@ -81,6 +61,30 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  //resetp password
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showMessage('Enter your email first');
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      if (!mounted) {
+        return;
+      }
+      _showMessage('Password reset email sent');
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) {
+        return;
+      }
+      _showMessage(e.message ?? 'Could not send reset email');
+    }
+  }
+
+  //show message 
   void _showMessage(String message) {
     ScaffoldMessenger.of(
       context,
@@ -99,14 +103,8 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const AuthLogo(showMenu: true),
+                  const AuthLogo(showMenu: false),
                   const SizedBox(height: 12),
-                  AuthTextField(
-                    label: 'Your Name',
-                    hint: 'Enter Your Name',
-                    controller: _nameController,
-                  ),
-                  const SizedBox(height: 24),
                   AuthTextField(
                     label: 'Your Email',
                     hint: 'Enter Your Email',
@@ -120,25 +118,28 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: _passwordController,
                     obscureText: true,
                   ),
-                  const SizedBox(height: 24),
-                  AuthTextField(
-                    label: 'Confirm Password',
-                    hint: 'Enter Your Password',
-                    controller: _confirmPasswordController,
-                    obscureText: true,
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _resetPassword,
+                      style: TextButton.styleFrom(
+                        foregroundColor: kPrimaryGreen,
+                      ),
+                      child: const Text(
+                        'Forgot Password ?',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  AuthTextField(
-                    label: 'Phone Number',
-                    hint: 'Enter Your Phone Number',
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                  ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 26),
                   SizedBox(
                     height: 64,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _signUp,
+                      onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryGreen,
                         foregroundColor: Colors.white,
@@ -157,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             )
                           : const Text(
-                              'Sign Up',
+                              'Log in',
                               style: TextStyle(
                                 fontSize: 23,
                                 fontWeight: FontWeight.w700,
@@ -166,23 +167,30 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  Align(
-                    alignment: Alignment.center,
-                    child: TextButton(
-                      onPressed: widget.onSwitchToLogin,
-                      style: TextButton.styleFrom(
-                        foregroundColor: kPrimaryGreen,
+                  //sized box
+                  const SizedBox(height: 24),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      const Text(
+                        'Don\'t have an account ? ',
+                        style: TextStyle(fontSize: 18, color: Colors.black87),
                       ),
-                      child: const Text(
-                        'Already have an account? Log in',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                      InkWell(
+                        onTap: widget.onSwitchToSignUp,
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: kPrimaryGreen,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
