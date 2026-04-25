@@ -1,4 +1,4 @@
-# 🎰 Bingo App - Backend Service
+# 🎰 Bingo App - Backend
 
 Welcome to the backend service for the **Bingo Application**, developed as part of the **MAD Group Project**.  
 This backend handles the core logic, API endpoints, authentication, and database operations.
