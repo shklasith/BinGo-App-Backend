@@ -1,0 +1,31 @@
+# bingo_merged
+
+Merged BinGo Flutter app wired to the local BinGo backend.
+
+## Local backend
+
+The default API base URL is `http://10.0.2.2:5000`, which targets a backend
+running on the host machine from an Android emulator.
+
+```sh
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5000
+```
+
+For a physical phone, replace the host with the computer LAN IP:
+
+```sh
+flutter run --dart-define=API_BASE_URL=http://<computer-lan-ip>:5000
+```
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
