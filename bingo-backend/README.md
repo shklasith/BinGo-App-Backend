@@ -3,6 +3,8 @@
 Welcome to the backend service for the **Bingo Application**, developed as part of the **MAD Group Project**.  
 This backend handles the core logic, API endpoints, authentication, and database operations.
 
+> Full project documentation is available in [`../docs/README.md`](../docs/README.md).
+
 ---
 
 ## 📌 Overview
