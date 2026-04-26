@@ -1,4 +1,4 @@
-# bingo_merged
+# Bingo Android App
 
 Merged BinGo Flutter app wired to the local BinGo backend.
 

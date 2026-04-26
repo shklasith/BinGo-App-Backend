@@ -21,9 +21,9 @@ Each listed app has its own `pubspec.yaml` and should be treated as a separate F
 
 ## Local Merged App
 
-`bingo-merged/` exists in the working tree as a current local/generated merged Flutter app, but it is untracked. Document it as local work unless it is intentionally added to Git.
+`bingo-android-app/` is the merged Flutter app for Android-focused testing and is wired to the local backend by default.
 
-Because it is untracked, avoid relying on it as canonical source for production behavior. Use `bingo-mobile/` for the integrated mobile app unless a task explicitly targets `bingo-merged/`.
+Use `bingo-mobile/` for the separate integrated mobile app unless a task explicitly targets `bingo-android-app/`.
 
 ## Working With Feature Apps
 

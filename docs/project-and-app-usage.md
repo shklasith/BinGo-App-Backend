@@ -228,4 +228,4 @@ Use this flow to demonstrate the app:
 - The web frontend lives in `bingo-frontend/`.
 - The backend lives in `bingo-backend/`.
 - Standalone Flutter app folders are useful references but should not be confused with the main mobile app.
-- `bingo-merged/` is currently a local untracked generated app, so treat it as local work unless it is intentionally committed.
+- `bingo-android-app/` is the committed merged Flutter app wired to the local backend.

@@ -99,4 +99,4 @@ git commit -m "docs: add full project documentation"
 git push origin main
 ```
 
-Before staging, check for unrelated untracked files. In the current checkout, `bingo-merged/` and `bingo-mobile/GEMINI.md` may exist locally and should not be staged unless they are intentionally part of the task.
+Before staging, check for unrelated untracked files. In the current checkout, `bingo-mobile/GEMINI.md` may exist locally and should not be staged unless it is intentionally part of the task.

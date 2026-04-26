@@ -10,7 +10,7 @@ BinGo is a waste-scanning and recycling companion project. The repository contai
 | Web frontend | `bingo-frontend/` | React/Vite app served under `/apphome` and protected by local session storage |
 | Mobile app | `bingo-mobile/` | Main Flutter app using Riverpod, GoRouter, Dio, and secure storage |
 | Standalone Flutter apps | `register/`, `scan/`, `session/`, `map/`, `leaderboard/`, `profile/`, `settings_page/`, `home_page/`, `bingo/` | Feature-specific Flutter projects used as separate app roots or UI references |
-| Local merged app | `bingo-merged/` | Current untracked/generated merged Flutter app. Treat it as local work unless it is intentionally committed |
+| Bingo Android app | `bingo-android-app/` | Merged Flutter app wired to the local backend |
 
 ## Architecture
 
