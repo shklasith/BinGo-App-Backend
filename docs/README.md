@@ -35,6 +35,7 @@ The backend also serves the production web frontend from `bingo-frontend/dist` a
 ## Documentation Index
 
 - [Setup](setup.md): prerequisites, environment variables, install steps, and local run commands.
+- [What BinGo Is and How to Use the App](project-and-app-usage.md): plain-language project explanation and user walkthrough.
 - [Backend](backend.md): backend architecture, scripts, database, auth, uploads, and Gemini scan flow.
 - [API](api.md): endpoint summary and request/response behavior.
 - [Frontend](frontend.md): React/Vite routes, API client, session handling, and build commands.
