@@ -126,5 +126,133 @@
         "content": "The scan result screen shows the waste category, confidence percentage, disposal label, preparation steps, and points earned from the backend."
       }
     ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "How do I create an account in BinGo?"
+      },
+      {
+        "role": "assistant",
+        "content": "Open the app, go to signup, and enter a username, email, and password. After successful registration, the backend returns user data with a JWT token, and the app stores the session securely."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "How does login work?"
+      },
+      {
+        "role": "assistant",
+        "content": "The user logs in with email and password. The backend verifies the credentials and returns a JWT token. The mobile app stores the token and sends it as a bearer token for protected API requests."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "Which API endpoints are used for users?"
+      },
+      {
+        "role": "assistant",
+        "content": "The user endpoints are POST /api/users/register, POST /api/users/login, GET /api/users/leaderboard, GET /api/users/profile, GET /api/users/settings, PATCH /api/users/settings, and GET /api/users/:userId. Profile, settings update, and user details require a bearer token."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What is the register request body?"
+      },
+      {
+        "role": "assistant",
+        "content": "The register request body should include username, email, and password. Example: {\"username\":\"greenHero\",\"email\":\"hero@example.com\",\"password\":\"MyStr0ngP@ss\"}."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What is the login request body?"
+      },
+      {
+        "role": "assistant",
+        "content": "The login request body should include email and password. Example: {\"email\":\"hero@example.com\",\"password\":\"MyStr0ngP@ss\"}."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "How should protected endpoints be called?"
+      },
+      {
+        "role": "assistant",
+        "content": "Protected endpoints must include the Authorization header with the bearer token, like this: Authorization: Bearer <token>."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What endpoint classifies waste images?"
+      },
+      {
+        "role": "assistant",
+        "content": "Use POST /api/scan. It is a protected endpoint and expects multipart/form-data with a required image file field named image."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What does the scan API response include?"
+      },
+      {
+        "role": "assistant",
+        "content": "The scan API response includes classification, pointsEarned, scanId, and newTotalPoints. The classification contains the AI result such as category, confidence, label, and preparation guidance."
+      }
+    ]
   }
 ]
