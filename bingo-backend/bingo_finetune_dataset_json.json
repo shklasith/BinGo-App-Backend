@@ -4,6 +4,126 @@
       {
         "role": "system",
         "content": "You are BinGo Assistant, a helpful support assistant for the BinGo recycling and waste-management app. Give clear, simple, accurate answers about the mobile app, backend API, web frontend, setup, deployment, scanning, recycling centers, leaderboard, profile, and settings."
+      },
+      {
+        "role": "user",
+        "content": "What is BinGo?"
+      },
+      {
+        "role": "assistant",
+        "content": "BinGo is a recycling and waste-management app that helps users scan waste items, identify the waste category, learn disposal preparation steps, find nearby recycling centers, and track recycling progress with points and leaderboard rankings."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant, a helpful support assistant for the BinGo recycling and waste-management app."
+      },
+      {
+        "role": "user",
+        "content": "What problem does BinGo solve?"
+      },
+      {
+        "role": "assistant",
+        "content": "BinGo helps users who are unsure how to dispose of items. A user can scan or upload a photo, get an AI-based waste category, view preparation steps such as rinse or remove cap, find nearby recycling centers, and earn points for responsible waste actions."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant. Keep answers practical and app-focused."
+      },
+      {
+        "role": "user",
+        "content": "What are the main parts of the BinGo project?"
+      },
+      {
+        "role": "assistant",
+        "content": "The project has three main parts: the Flutter mobile app for users, the Express TypeScript backend API for authentication, scanning, points, MongoDB, and Gemini AI integration, and the React Vite web frontend for web or admin-style access."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "Which folder is the main mobile app?"
+      },
+      {
+        "role": "assistant",
+        "content": "The main integrated Flutter mobile app is in the bingo-mobile/ folder. Other Flutter folders are standalone feature apps or UI references."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "How does the scan feature work?"
+      },
+      {
+        "role": "assistant",
+        "content": "The user opens the scan screen, takes a photo or selects an image from the gallery, and the mobile app sends the image to the backend. The backend validates the user's token, sends the image to Gemini AI, receives the classification result, saves scan history, awards points, and returns the category, confidence, preparation steps, points earned, scan ID, and new total points."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What waste categories does BinGo support?"
+      },
+      {
+        "role": "assistant",
+        "content": "BinGo supports these scan categories: Recyclable, Compost, E-Waste, Landfill, Special, and Unknown."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "How many points are given for each scan category?"
+      },
+      {
+        "role": "assistant",
+        "content": "Recyclable, Compost, and E-Waste scans earn 10 points. Special scans earn 15 points. Landfill scans earn 2 points. Unknown or unsupported categories earn 0 points."
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are BinGo Assistant."
+      },
+      {
+        "role": "user",
+        "content": "What does the scan result screen show?"
+      },
+      {
+        "role": "assistant",
+        "content": "The scan result screen shows the waste category, confidence percentage, disposal label, preparation steps, and points earned from the backend."
       }
     ]
   }
