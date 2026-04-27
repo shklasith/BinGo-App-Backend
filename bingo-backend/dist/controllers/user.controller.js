@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendPushToUser = exports.removePushToken = exports.registerPushToken = exports.updateUserSettings = exports.getUserSettings = exports.getLeaderboard = exports.getUserById = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
+exports.sendPushToUser = exports.removePushToken = exports.registerPushToken = exports.updateUserSettings = exports.getUserSettings = exports.getAdminUserList = exports.getLeaderboard = exports.getUserById = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const notification_service_1 = require("../services/notification.service");
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
@@ -116,6 +116,21 @@ const getLeaderboard = async (_req, res) => {
     }
 };
 exports.getLeaderboard = getLeaderboard;
+const getAdminUserList = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+        const users = await User_1.default.find()
+            .select('username email points badges impactStats settings createdAt updatedAt')
+            .sort({ createdAt: -1 });
+        return res.status(200).json({ success: true, data: users });
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+exports.getAdminUserList = getAdminUserList;
 const getUserSettings = async (req, res) => {
     try {
         if (!req.user) {

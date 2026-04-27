@@ -122,6 +122,22 @@ export const getLeaderboard = async (_req: Request, res: Response) => {
     }
 };
 
+export const getAdminUserList = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const users = await User.find()
+            .select('username email points badges impactStats settings createdAt updatedAt')
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({ success: true, data: users });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 export const getUserSettings = async (req: AuthRequest, res: Response) => {
     try {
         if (!req.user) {

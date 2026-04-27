@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+    getAdminUserList,
     getLeaderboard,
     getProfile,
     getUserSettings,
@@ -243,6 +244,7 @@ router.get('/leaderboard', getLeaderboard);
 router.get('/profile', protect, getProfile as any);
 router.get('/settings', protect, getUserSettings as any);
 router.patch('/settings', protect, updateUserSettings as any);
+router.get('/admin/list', protect, getAdminUserList as any);
 router.post('/push-token', protect, registerPushToken as any);
 router.delete('/push-token', protect, removePushToken as any);
 router.post('/:userId/push', protect, sendPushToUser as any);
