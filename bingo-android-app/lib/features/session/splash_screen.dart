@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/theme/app_theme.dart';
+import '../notifications/push_notification_service.dart';
 import 'session_controller.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _init() async {
-    await SessionController().getCurrentUserId();
+    final userId = await SessionController().getCurrentUserId();
+    if (userId != null) {
+      await PushNotificationService.registerForSignedInUser();
+    }
 
     if (!mounted) return;
 

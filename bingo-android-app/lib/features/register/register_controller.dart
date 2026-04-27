@@ -1,4 +1,5 @@
 import '../../core/network/api_client.dart';
+import '../notifications/push_notification_service.dart';
 import '../session/session_store.dart';
 
 class RegisterController {
@@ -28,5 +29,6 @@ class RegisterController {
     }
 
     await _store.saveSession(userId: userId, token: token);
+    await PushNotificationService.registerForSignedInUser();
   }
 }

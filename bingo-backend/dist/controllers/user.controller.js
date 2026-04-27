@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserSettings = exports.getUserSettings = exports.getLeaderboard = exports.getUserById = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
+exports.sendPushToUser = exports.removePushToken = exports.registerPushToken = exports.updateUserSettings = exports.getUserSettings = exports.getLeaderboard = exports.getUserById = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
 const User_1 = __importDefault(require("../models/User"));
+const notification_service_1 = require("../services/notification.service");
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
 const defaultSettings = {
     darkMode: false,
@@ -169,3 +170,83 @@ const updateUserSettings = async (req, res) => {
     }
 };
 exports.updateUserSettings = updateUserSettings;
+const registerPushToken = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+        const token = req.body.token?.toString().trim();
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Push token is required' });
+        }
+        await User_1.default.findByIdAndUpdate(req.user._id, {
+            $addToSet: { fcmTokens: token },
+        });
+        return res.status(200).json({ success: true, data: { registered: true } });
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+exports.registerPushToken = registerPushToken;
+const removePushToken = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+        const token = req.body.token?.toString().trim();
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Push token is required' });
+        }
+        await User_1.default.findByIdAndUpdate(req.user._id, {
+            $pull: { fcmTokens: token },
+        });
+        return res.status(200).json({ success: true, data: { removed: true } });
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+exports.removePushToken = removePushToken;
+const sendPushToUser = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+        const { userId } = req.params;
+        const title = req.body.title?.toString().trim();
+        const body = req.body.body?.toString().trim();
+        const data = req.body.data && typeof req.body.data === 'object'
+            ? Object.fromEntries(Object.entries(req.body.data).map(([key, value]) => [
+                key,
+                String(value),
+            ]))
+            : undefined;
+        if (!title || !body) {
+            return res.status(400).json({
+                success: false,
+                message: 'Notification title and body are required',
+            });
+        }
+        const user = await User_1.default.findById(userId).select('fcmTokens');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        const result = await (0, notification_service_1.sendPushNotification)({
+            tokens: user.fcmTokens,
+            title,
+            body,
+            data,
+        });
+        if (result.invalidTokens.length > 0) {
+            await User_1.default.findByIdAndUpdate(userId, {
+                $pull: { fcmTokens: { $in: result.invalidTokens } },
+            });
+        }
+        return res.status(200).json({ success: true, data: result });
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+exports.sendPushToUser = sendPushToUser;

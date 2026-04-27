@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { AuthRequest } from '../middleware/auth';
 import User from '../models/User';
+import { sendPushNotification } from '../services/notification.service';
 import generateToken from '../utils/generateToken';
 
 const defaultSettings = {
@@ -178,6 +179,97 @@ export const updateUserSettings = async (req: AuthRequest, res: Response) => {
             success: true,
             data: normalizeSettings(req.user.settings),
         });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const registerPushToken = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const token = req.body.token?.toString().trim();
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Push token is required' });
+        }
+
+        await User.findByIdAndUpdate(req.user._id, {
+            $addToSet: { fcmTokens: token },
+        });
+
+        return res.status(200).json({ success: true, data: { registered: true } });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const removePushToken = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const token = req.body.token?.toString().trim();
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Push token is required' });
+        }
+
+        await User.findByIdAndUpdate(req.user._id, {
+            $pull: { fcmTokens: token },
+        });
+
+        return res.status(200).json({ success: true, data: { removed: true } });
+    } catch (error: any) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const sendPushToUser = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        const { userId } = req.params;
+        const title = req.body.title?.toString().trim();
+        const body = req.body.body?.toString().trim();
+        const data = req.body.data && typeof req.body.data === 'object'
+            ? Object.fromEntries(
+                Object.entries(req.body.data as Record<string, unknown>).map(([key, value]) => [
+                    key,
+                    String(value),
+                ])
+            )
+            : undefined;
+
+        if (!title || !body) {
+            return res.status(400).json({
+                success: false,
+                message: 'Notification title and body are required',
+            });
+        }
+
+        const user = await User.findById(userId).select('fcmTokens');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const result = await sendPushNotification({
+            tokens: user.fcmTokens,
+            title,
+            body,
+            data,
+        });
+
+        if (result.invalidTokens.length > 0) {
+            await User.findByIdAndUpdate(userId, {
+                $pull: { fcmTokens: { $in: result.invalidTokens } },
+            });
+        }
+
+        return res.status(200).json({ success: true, data: result });
     } catch (error: any) {
         return res.status(500).json({ success: false, message: error.message });
     }

@@ -6,7 +6,10 @@ import {
     getUserSettings,
     getUserById,
     loginUser,
+    registerPushToken,
     registerUser,
+    removePushToken,
+    sendPushToUser,
     updateUserSettings
 } from '../controllers/user.controller';
 import { protect } from '../middleware/auth';
@@ -240,6 +243,9 @@ router.get('/leaderboard', getLeaderboard);
 router.get('/profile', protect, getProfile as any);
 router.get('/settings', protect, getUserSettings as any);
 router.patch('/settings', protect, updateUserSettings as any);
+router.post('/push-token', protect, registerPushToken as any);
+router.delete('/push-token', protect, removePushToken as any);
+router.post('/:userId/push', protect, sendPushToUser as any);
 
 /**
  * @openapi

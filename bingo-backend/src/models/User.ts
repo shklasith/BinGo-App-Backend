@@ -7,6 +7,7 @@ export interface IUser extends Document {
     passwordHash: string;
     points: number;
     badges: string[];
+    fcmTokens: string[];
     settings: {
         darkMode: boolean;
         scanReminders: boolean;
@@ -29,6 +30,7 @@ const UserSchema: Schema<IUser> = new Schema(
         passwordHash: { type: String, required: true },
         points: { type: Number, default: 0 },
         badges: [{ type: String }],
+        fcmTokens: [{ type: String }],
         settings: {
             darkMode: { type: Boolean, default: false },
             scanReminders: { type: Boolean, default: true },

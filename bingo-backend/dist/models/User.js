@@ -44,6 +44,7 @@ const UserSchema = new mongoose_1.Schema({
     passwordHash: { type: String, required: true },
     points: { type: Number, default: 0 },
     badges: [{ type: String }],
+    fcmTokens: [{ type: String }],
     settings: {
         darkMode: { type: Boolean, default: false },
         scanReminders: { type: Boolean, default: true },

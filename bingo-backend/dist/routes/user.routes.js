@@ -228,6 +228,9 @@ router.get('/leaderboard', user_controller_1.getLeaderboard);
 router.get('/profile', auth_1.protect, user_controller_1.getProfile);
 router.get('/settings', auth_1.protect, user_controller_1.getUserSettings);
 router.patch('/settings', auth_1.protect, user_controller_1.updateUserSettings);
+router.post('/push-token', auth_1.protect, user_controller_1.registerPushToken);
+router.delete('/push-token', auth_1.protect, user_controller_1.removePushToken);
+router.post('/:userId/push', auth_1.protect, user_controller_1.sendPushToUser);
 /**
  * @openapi
  * /users/{userId}:

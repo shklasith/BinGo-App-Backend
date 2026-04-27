@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/network/api_client.dart';
+import '../notifications/push_notification_service.dart';
 import '../register/auth_text_field.dart';
 import '../register/validators.dart';
 import '../session/session_store.dart';
@@ -50,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       await _sessionStore.saveSession(userId: userId, token: token);
+      await PushNotificationService.registerForSignedInUser();
 
       if (!mounted) return;
       context.go('/home');
