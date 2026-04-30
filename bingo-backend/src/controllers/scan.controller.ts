@@ -19,7 +19,7 @@ export const scanWaste = async (req: AuthRequest, res: Response) => {
         const filename = req.file.filename;
 
         // Correct MIME type if it's application/octet-stream
-        if (mimeType === 'application/octet-stream') {
+        if (mimeType === 'application/octet-stream' || !mimeType.startsWith('image/')) {
             const ext = path.extname(filename).toLowerCase();
             if (ext === '.jpg' || ext === '.jpeg') {
                 mimeType = 'image/jpeg';

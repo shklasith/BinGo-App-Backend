@@ -18,8 +18,10 @@ const scanWaste = async (req, res) => {
         filePath = req.file.path;
         let mimeType = req.file.mimetype;
         const filename = req.file.filename;
+        console.log(`[Scan] Original MIME type: ${mimeType}, Filename: ${filename}`);
         // Correct MIME type if it's application/octet-stream
-        if (mimeType === 'application/octet-stream') {
+        if (mimeType === 'application/octet-stream' || !mimeType.startsWith('image/')) {
+            console.log(`[Scan] Attempting to correct MIME type for: ${mimeType}`);
             const ext = path_1.default.extname(filename).toLowerCase();
             if (ext === '.jpg' || ext === '.jpeg') {
                 mimeType = 'image/jpeg';
@@ -37,6 +39,7 @@ const scanWaste = async (req, res) => {
                 // Default to image/jpeg for most photos if unknown
                 mimeType = 'image/jpeg';
             }
+            console.log(`[Scan] Corrected MIME type to: ${mimeType}`);
         }
         const classification = await (0, gemini_service_1.analyzeWasteImage)(filePath, mimeType);
         try {
