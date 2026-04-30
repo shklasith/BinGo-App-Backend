@@ -9,7 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const promises_1 = __importDefault(require("fs/promises"));
 dotenv_1.default.config();
 const ai = new genai_1.GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const model = 'gemini-2.0-flash';
+const model = 'gemini-flash-latest';
 const CLASSIFICATION_SCHEMA = {
     type: 'object',
     properties: {

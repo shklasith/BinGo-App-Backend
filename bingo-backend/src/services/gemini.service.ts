@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 dotenv.config();
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const model = 'gemini-2.0-flash';
+const model = 'gemini-flash-latest';
 
 export interface ClassificationResult {
     itemName: string;

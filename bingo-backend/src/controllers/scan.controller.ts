@@ -6,19 +6,21 @@ import ScanHistory from '../models/ScanHistory';
 import { analyzeWasteImage } from '../services/gemini.service';
 
 export const scanWaste = async (req: AuthRequest, res: Response) => {
+    let filePath = '';
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No image provided' });
         }
 
         const user = req.user;
-        const filePath = req.file.path;
+        filePath = req.file.path;
         const mimeType = req.file.mimetype;
         const filename = req.file.filename;
         const classification = await analyzeWasteImage(filePath, mimeType);
 
         try {
             await fs.unlink(filePath);
+            filePath = '';
         } catch (error) {
             console.warn('Failed to delete temp file:', error);
         }
@@ -73,6 +75,13 @@ export const scanWaste = async (req: AuthRequest, res: Response) => {
             }
         });
     } catch (error: any) {
+        if (filePath) {
+            try {
+                await fs.unlink(filePath);
+            } catch (unlinkError) {
+                console.warn('Failed to delete temp file after error:', unlinkError);
+            }
+        }
         console.error('Scan Controller Error:', error);
         return res.status(500).json({ success: false, message: error.message || 'Internal Server Error' });
     }

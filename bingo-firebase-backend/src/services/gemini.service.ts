@@ -2,7 +2,7 @@ import { GoogleGenAI } from '@google/genai';
 
 import { ClassificationResult, WasteCategory } from '../types/domain';
 
-const model = process.env.GEMINI_MODEL ?? 'gemini-2.0-flash';
+const model = process.env.GEMINI_MODEL ?? 'gemini-flash-latest';
 
 const validCategories: WasteCategory[] = ['Recyclable', 'Compost', 'E-Waste', 'Landfill', 'Special', 'Unknown'];
 

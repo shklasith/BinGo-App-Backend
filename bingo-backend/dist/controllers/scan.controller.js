@@ -8,17 +8,19 @@ const promises_1 = __importDefault(require("fs/promises"));
 const ScanHistory_1 = __importDefault(require("../models/ScanHistory"));
 const gemini_service_1 = require("../services/gemini.service");
 const scanWaste = async (req, res) => {
+    let filePath = '';
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No image provided' });
         }
         const user = req.user;
-        const filePath = req.file.path;
+        filePath = req.file.path;
         const mimeType = req.file.mimetype;
         const filename = req.file.filename;
         const classification = await (0, gemini_service_1.analyzeWasteImage)(filePath, mimeType);
         try {
             await promises_1.default.unlink(filePath);
+            filePath = '';
         }
         catch (error) {
             console.warn('Failed to delete temp file:', error);
@@ -72,6 +74,14 @@ const scanWaste = async (req, res) => {
         });
     }
     catch (error) {
+        if (filePath) {
+            try {
+                await promises_1.default.unlink(filePath);
+            }
+            catch (unlinkError) {
+                console.warn('Failed to delete temp file after error:', unlinkError);
+            }
+        }
         console.error('Scan Controller Error:', error);
         return res.status(500).json({ success: false, message: error.message || 'Internal Server Error' });
     }
